@@ -17,6 +17,14 @@ defmodule ExMon do
   end
 
   def make_move(move) do
+    Game.info()
+    |> Map.get(:status)
+    |> handle_status(move)
+  end
+
+  defp handle_status(:game_over, _move), do: Status.print_round_message(Game.info())
+
+  defp handle_status(_other, move) do
     move
     |> Actions.fetch_move()
     |> do_move()
@@ -31,6 +39,7 @@ defmodule ExMon do
       :move_heal -> Actions.heal()
       move -> Actions.attack(move)
     end
+
     Status.print_round_message(Game.info())
   end
 
