@@ -3,6 +3,7 @@ defmodule ExMonTest do
   import ExUnit.CaptureIO
 
   alias ExMon.Player
+  alias ExMon.Game
 
   describe "create_player/4" do
     test "returns a player" do
@@ -52,6 +53,31 @@ defmodule ExMonTest do
       assert messages =~ "It's computer turn"
       assert messages =~ "It's player turn"
       assert messages =~ "status: :continue"
+    end
+
+    test "when the game is over and make a move" do
+      expected_response = %{
+        computer: %Player{
+          life: 0,
+          moves: %{move_avg: :chute, move_heal: :cura, move_rnd: :soco},
+          name: "Robotinik"
+        },
+        player: %Player{
+          life: 0,
+          moves: %{move_avg: :chute, move_heal: :cura, move_rnd: :soco},
+          name: "Fulano"
+        },
+        status: :started,
+        turn: :player
+      }
+
+      messages =
+        capture_io(fn ->
+          Game.update(expected_response)
+          ExMon.make_move(:chute)
+        end)
+
+      assert messages =~ "status: :game_over"
     end
 
     test "when the move is inavlid returns an error message" do
