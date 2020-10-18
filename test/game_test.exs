@@ -103,7 +103,7 @@ defmodule ExMon.GameTest do
   end
 
   describe "turn/0" do
-    test "returns player or computer" do
+    test "returns actual turn" do
       player = Player.build("Fulano", :chute, :soco, :cura)
       computer = Player.build("Robotinik", :chute, :soco, :cura)
 
